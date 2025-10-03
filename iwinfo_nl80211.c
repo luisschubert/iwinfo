@@ -28,6 +28,7 @@
 #include <glob.h>
 #include <fnmatch.h>
 #include <stdarg.h>
+#include <stdbool.h>
 #include <stdlib.h>
 #include <string.h>
 
@@ -37,6 +38,9 @@
 #define min(x, y) ((x) < (y)) ? (x) : (y)
 
 #define BIT(x) (1ULL<<(x))
+
+/* Forward declarations */
+static int nl80211_channel2freq(int channel, const char *band, bool ax);
 
 static struct nl80211_state *nls = NULL;
 
