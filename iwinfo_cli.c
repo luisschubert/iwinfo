@@ -18,8 +18,13 @@
 
 #include <stdio.h>
 #include <glob.h>
+#include <stdbool.h>
+#include <stdint.h>
+#include <string.h>
+#include <stdlib.h>
 
 #include "iwinfo.h"
+#include "iwinfo/utils.h"
 
 
 static char * format_bssid(unsigned char *mac)

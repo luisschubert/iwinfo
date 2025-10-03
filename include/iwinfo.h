@@ -324,13 +324,7 @@ struct iwinfo_scanlist_ah_chan_entry {
 	uint8_t chan_width;
 };
 
-static uint16_t ah_chan_width[] = {
-	1,  /* 1 MHz*/
-	2,  /* 2 MHz*/
-	4,  /* 4 MHz*/
-	8,  /* 8 MHz*/
-	16, /* 16 MHz*/
-};
+extern const uint16_t ah_chan_width[5];
 
 extern const char * const ht_secondary_offset[4];
 /* 0 = 20 MHz
