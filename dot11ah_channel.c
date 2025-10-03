@@ -111,8 +111,13 @@ static void morse_get_country(country_channel_map_t *halow_vals)
 	FILE *country_parameter;
 
 	country_parameter = fopen("/sys/module/morse/parameters/country", "r");
-	fscanf(country_parameter, "%2s", halow_vals->country);
-	fclose(country_parameter);
+	if (country_parameter) {
+		fscanf(country_parameter, "%2s", halow_vals->country);
+		fclose(country_parameter);
+	} else {
+		/* Fallback: try to detect country from other sources or use default */
+		strcpy(halow_vals->country, "US"); /* Default to US if country detection fails */
+	}
 }
 
 country_channel_map_t *set_s1g_channel_map(void)
@@ -131,7 +136,8 @@ country_channel_map_t *set_s1g_channel_map(void)
 		}
 	}
 
-	return NULL;
+	/* Fallback to US channels if country detection fails or country not found */
+	return mapped_channel[0];
 }
 
 

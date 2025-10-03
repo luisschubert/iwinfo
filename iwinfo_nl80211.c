@@ -3696,13 +3696,25 @@ country_channel_map_t *g_map = NULL;
 static bool nl80211_is_halow(const char *ifname)
 {
 	const struct iwinfo_hardware_entry *e = nl80211_get_hardware_entry(ifname);
-	if (!e)
+	char *phy, path[PATH_MAX], compatible[256];
+	
+	/* First try hardware database lookup */
+	if (e && !strcmp(e->vendor_name, "Morse Micro"))
+		return true;
+	
+	/* Fallback: check device tree compatible string for morse devices */
+	phy = nl80211_ifname2phy(ifname);
+	if (!phy)
 		return false;
-
-	if (strcmp(e->vendor_name, "Morse Micro"))
-		return false;
-
-	return true;
+		
+	snprintf(path, sizeof(path), "/sys/class/ieee80211/%s/device/of_node/compatible", phy);
+	if (nl80211_readstr(path, compatible, sizeof(compatible)) > 0) {
+		/* Check if compatible string contains "morse" */
+		if (strstr(compatible, "morse") != NULL)
+			return true;
+	}
+	
+	return false;
 }
 
 static inline void _sanitise_rate_entry(struct iwinfo_rate_entry *re){
