@@ -406,33 +406,8 @@ static int nl80211_phy_idx_from_phy(const char *opt)
 
 static int nl80211_phy_idx_from_uci(const char *name)
 {
-	struct uci_section *s;
-	const char *opt;
-	int idx = -1;
-
-	s = iwinfo_uci_get_radio(name, "mac80211");
-	if (!s){
-		s = iwinfo_uci_get_radio(name, "morse");
-		if(!s)
-			goto out;
-	}
-
-	opt = uci_lookup_option_string(uci_ctx, s, "path");
-	idx = nl80211_phy_idx_from_path(opt);
-	if (idx >= 0)
-		goto out;
-
-	opt = uci_lookup_option_string(uci_ctx, s, "macaddr");
-	idx = nl80211_phy_idx_from_macaddr(opt);
-	if (idx >= 0)
-		goto out;
-
-	opt = uci_lookup_option_string(uci_ctx, s, "phy");
-	idx = nl80211_phy_idx_from_phy(opt);
-
-out:
-	iwinfo_uci_free();
-	return idx;
+	/* UCI support removed - return -1 to indicate no UCI config found */
+	return -1;
 }
 
 static bool nl80211_is_ifname(const char *name)
@@ -1323,9 +1298,10 @@ static int nl80211_get_ssid(const char *ifname, char *buf)
 		                      IWINFO_ESSID_MAX_SIZE + 1);
 
 	/* failed, try to obtain Mesh ID */
-	if (sb.ssid[0] == 0)
-		iwinfo_ubus_query(res ? res : ifname, "mesh_id",
-		                  buf, IWINFO_ESSID_MAX_SIZE + 1);
+	if (sb.ssid[0] == 0) {
+		/* Ubus support removed - mesh_id query not available */
+		/* This will just leave ssid empty if not found via other means */
+	}
 
 	return (sb.ssid[0] == 0) ? -1 : 0;
 }
