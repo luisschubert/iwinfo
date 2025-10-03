@@ -2,15 +2,15 @@ IWINFO_SOVERSION   = $(if $(SOVERSION),$(SOVERSION),0)
 
 IWINFO_BACKENDS    = $(BACKENDS)
 IWINFO_CFLAGS      = $(CFLAGS) -Wall -std=gnu99 -fstrict-aliasing -Iinclude
-IWINFO_LDFLAGS     = -luci -lubox -lubus
+IWINFO_LDFLAGS     = 
 
 IWINFO_LIB         = libiwinfo.so
 IWINFO_LIB_LDFLAGS = $(LDFLAGS) -shared -Wl,-soname -Wl,$(IWINFO_LIB).$(IWINFO_SOVERSION)
 IWINFO_LIB_OBJ     = iwinfo_utils.o iwinfo_lib.o
 
-IWINFO_LUA         = iwinfo.so
-IWINFO_LUA_LDFLAGS = $(LDFLAGS) -shared -L. -liwinfo -llua
-IWINFO_LUA_OBJ     = iwinfo_lua.o
+IWINFO_LUA         = 
+IWINFO_LUA_LDFLAGS = 
+IWINFO_LUA_OBJ     = 
 
 IWINFO_CLI         = iwinfo
 IWINFO_CLI_LDFLAGS = $(LDFLAGS) -L. -liwinfo
@@ -41,7 +41,7 @@ ifneq ($(filter nl80211,$(IWINFO_BACKENDS)),)
 endif
 
 
-compile: clean $(IWINFO_LIB) $(IWINFO_LUA) $(IWINFO_CLI)
+compile: clean $(IWINFO_LIB) $(IWINFO_CLI)
 
 %.o: %.c
 	$(CC) $(IWINFO_CFLAGS) $(FPIC) -c -o $@ $<
@@ -50,11 +50,8 @@ $(IWINFO_LIB): $(IWINFO_LIB_OBJ)
 	$(CC) $(IWINFO_LDFLAGS) $(IWINFO_LIB_LDFLAGS) -o $(IWINFO_LIB).$(IWINFO_SOVERSION) $(IWINFO_LIB_OBJ) && \
 	ln -sf $(IWINFO_LIB).$(IWINFO_SOVERSION) $(IWINFO_LIB)
 
-$(IWINFO_LUA): $(IWINFO_LUA_OBJ)
-	$(CC) $(IWINFO_LDFLAGS) $(IWINFO_LUA_LDFLAGS) -o $(IWINFO_LUA) $(IWINFO_LUA_OBJ)
-
 $(IWINFO_CLI): $(IWINFO_CLI_OBJ)
 	$(CC) $(IWINFO_LDFLAGS) $(IWINFO_CLI_LDFLAGS) -o $(IWINFO_CLI) $(IWINFO_CLI_OBJ)
 
 clean:
-	rm -f *.o $(IWINFO_LIB) $(IWINFO_LUA) $(IWINFO_CLI)
+	rm -f *.o $(IWINFO_LIB) $(IWINFO_CLI)
