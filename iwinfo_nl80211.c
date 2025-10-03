@@ -23,6 +23,7 @@
  * Parts of this code are derived from the Linux iw utility.
  */
 
+#define _GNU_SOURCE
 #include <sys/stat.h>
 #include <limits.h>
 #include <glob.h>
@@ -34,6 +35,11 @@
 
 #include "iwinfo_nl80211.h"
 #include "iwinfo_morsecli.h"
+
+/* Fallback for FNM_CASEFOLD if not available */
+#ifndef FNM_CASEFOLD
+#define FNM_CASEFOLD 0
+#endif
 
 #define min(x, y) ((x) < (y)) ? (x) : (y)
 
